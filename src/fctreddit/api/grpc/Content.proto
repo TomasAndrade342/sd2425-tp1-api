@@ -11,7 +11,7 @@ service Content {
 
 	rpc getPost ( GetPostArgs ) returns ( GrpcPost ) {}
 	
-	rpc getPostAnswers ( GetPostArgs ) returns ( GetPostsResult ) {}
+	rpc getPostAnswers ( GetPostAnswersArgs ) returns ( GetPostsResult ) {}
 
 	rpc updatePost ( UpdatePostArgs ) returns ( GrpcPost ) {}
 
@@ -56,11 +56,16 @@ message GetPostsArgs {
 }
 
 message GetPostsResult {
-    repeated string postId = 1;
+    	repeated string postId = 1;
 }
 
 message GetPostArgs {
 	string postId = 1;
+}
+
+message GetPostAnswersArgs {
+	string postId = 1;
+	optional int64 timeout = 2;
 }
 
 message UpdatePostArgs {

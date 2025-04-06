@@ -1,4 +1,8 @@
 target/
+.settings/
+.project
+.classpath
+.DS_Store
 .idea/
 bin/
 src/fctreddit/impl/grpc/generated_java/

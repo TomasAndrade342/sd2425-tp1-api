@@ -26,6 +26,7 @@ public interface RestContent {
 	public static final String DOWNVOTE = "downvote";
 	public static final String USERID = "userId";
 	public static final String SORTBY = "sortBy";
+	public static final String TIMEOUT = "timeout";
 	
 	/**
 	 * The following constants are the values that can be sent for the query parameter SORTBY
@@ -41,7 +42,7 @@ public interface RestContent {
 	 * was received.
 	 * 
 	 * @param post - The Post to be created, that should contain the userId of the author in the appropriate field.
-	 * @param userPassword - the password of author of the new post
+	 * @param password - the password of author of the new post
 	 * @return OK and PostID if the post was created;
 	 * NOT FOUND, if the owner of the short does not exist;
 	 * FORBIDDEN, if the password is not correct;
@@ -87,14 +88,19 @@ public interface RestContent {
 	 * Retrieves a list with all unique identifiers of posts that have the post
 	 * identified by the postId as their ancestor (i.e., the replies to that post),
 	 * the order should be the creation order of those posts.
-	 * @return 	OK and the List of PostIds that match all options in the right order 
-	 * 			NOT_FOUND if postId does not match an existing Post	
-	 * 		
+	 * @param postId the postId for which answers want to be obtained
+	 * @param timeout (optional) indicates the maximum amount of time that this operation should
+	 * 		  wait (before returning a reply to the client) for a new answer to be added
+	 * 		  to the post. If a new answer is added to the target post after the start of 
+	 * 		  the execution of this operation and before the timeout expires an answer should
+	 * 		  be sent to the client at that time. 		   
+	 * @return 	OK and the List of PostIds that are answers to the post ordered by creationTime 
+	 * 			NOT_FOUND if postId does not match an existing Post			
 	 */
 	@GET
 	@Path("{" + POSTID + "}/" + REPLIES)
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<String> getPostAnswers(@PathParam(POSTID) String postId);
+	public List<String> getPostAnswers(@PathParam(POSTID) String postId, @QueryParam(TIMEOUT) long timeout);
 	
 	/**
 	 * Updates the contents of a post restricted to the fields:
@@ -139,11 +145,11 @@ public interface RestContent {
 	 * @param userPassword Password of user making the upvote
 	 * @return 	NO_CONTENT in case of success
 	 * 			NOT_FOUND if the postId does not match an existing post or the user does not exists
-	 * 			FORBIDDEN if the password is not correct
+	 * 			FORBIDDEN if the password is not correct or the user doing the operation is not the owner
 	 * 			CONFLICT if the user already has made an upvote or downvote on the post
 	 *			BAD_REQUEST otherwise
 	 */
-	@PUT
+	@POST
 	@Path("{" + POSTID + "}/" + UPVOTE + "/{" + USERID + "}" )
 	public void upVotePost(@PathParam(POSTID) String postId, @PathParam(USERID) String userId, @QueryParam(PASSWORD) String userPassword);
 	
@@ -159,7 +165,7 @@ public interface RestContent {
 	 * 			CONFLICT if the user had not made an upvote on this post previously
 	 *			BAD_REQUEST otherwise
 	 */
-	@PUT
+	@DELETE
 	@Path("{" + POSTID + "}/" + UPVOTE + "/{" + USERID + "}" )
 	public void removeUpVotePost(@PathParam(POSTID) String postId, @PathParam(USERID) String userId, @QueryParam(PASSWORD) String userPassword);
 	
@@ -177,7 +183,7 @@ public interface RestContent {
 	 * 			CONFLICT if the user already has made an upvote or downvote on the post
 	 *			BAD_REQUEST otherwise
 	 */
-	@PUT
+	@POST
 	@Path("{" + POSTID + "}/" + DOWNVOTE + "/{" + USERID + "}" )
 	public void downVotePost(@PathParam(POSTID) String postId, @PathParam(USERID) String userId, @QueryParam(PASSWORD) String userPassword);
 	
@@ -193,7 +199,7 @@ public interface RestContent {
 	 * 			CONFLICT if the user had not made an downvote on this post previously
 	 *			BAD_REQUEST otherwise
 	 */
-	@PUT
+	@DELETE
 	@Path("{" + POSTID + "}/" + DOWNVOTE + "/{" + USERID + "}" )
 	public void removeDownVotePost(@PathParam(POSTID) String postId, @PathParam(USERID) String userId, @QueryParam(PASSWORD) String userPassword);
 	
