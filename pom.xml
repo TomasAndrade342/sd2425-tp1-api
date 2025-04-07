@@ -7,10 +7,10 @@
 	<version>1</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<authors>66196-71521</authors>
+		<authors>xxxxx-yyyyy</authors>
 	</properties>
 	<build>
-		<sourceDirectory>src</sourceDirectory>
+		<sourceDirectory>../sd2425-proj-api/src</sourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -40,7 +40,7 @@
 						<include>${project.basedir}/src/fctreddit/api/grpc</include>
 					</inputDirectories>
 
-					<outputDirectory>src/</outputDirectory>
+					<outputDirectory>../sd2425-proj-api/src</outputDirectory>
 				</configuration>
 				<executions>
 					<execution>
