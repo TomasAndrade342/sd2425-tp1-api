@@ -7,10 +7,10 @@
 	<version>1</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<authors>xxxxx-yyyyy</authors>
+		<authors>66196-71521</authors>
 	</properties>
 	<build>
-		<sourceDirectory>../sd2425-proj-api/src</sourceDirectory>
+		<sourceDirectory>../sd2425-tp1-api/src</sourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
