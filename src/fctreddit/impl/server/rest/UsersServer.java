@@ -1,9 +1,11 @@
 package fctreddit.impl.server.rest;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.logging.Logger;
 
+import fctreddit.api.Discovery;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -31,8 +33,6 @@ public class UsersServer {
             JdkHttpServerFactory.createHttpServer( URI.create(serverURI), config);
 
             Log.info(String.format("%s Server ready @ %s\n",  SERVICE, serverURI));
-
-            //More code can be executed here...
         } catch( Exception e) {
             Log.severe(e.getMessage());
         }
