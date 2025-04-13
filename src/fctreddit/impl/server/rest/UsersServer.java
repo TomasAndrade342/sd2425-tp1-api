@@ -1,7 +1,6 @@
 package fctreddit.impl.server.rest;
 
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.logging.Logger;
 
@@ -19,7 +18,7 @@ public class UsersServer {
     }
 
     public static final int PORT = 8080;
-    public static final String SERVICE = "UsersService";
+    public static final String SERVICE = "Users";
     private static final String SERVER_URI_FMT = "http://%s:%s/rest";
 
     public static void main(String[] args) {
@@ -33,6 +32,8 @@ public class UsersServer {
             JdkHttpServerFactory.createHttpServer( URI.create(serverURI), config);
 
             Log.info(String.format("%s Server ready @ %s\n",  SERVICE, serverURI));
+            Discovery discovery = new Discovery(Discovery.DISCOVERY_ADDR, SERVICE, serverURI);
+            discovery.start();
         } catch( Exception e) {
             Log.severe(e.getMessage());
         }
