@@ -1,5 +1,7 @@
 package fctreddit.api.java;
 
+import java.io.IOException;
+
 public interface Image {
 
 	/**
@@ -11,7 +13,7 @@ public interface Image {
 	 * 			FORBIDDEN if user password is incorrect
 	 * 		   	BAD_REQUEST if imageContents has a size of zero or password is null
 	 */
-	Result<String> createImage(String userId, byte[] imageContent, String password);
+	Result<String> createImage(String userId, byte[] imageContent, String password) throws IOException;
 
 	/**
 	 * Gets the contents of an image associated with the imageId
