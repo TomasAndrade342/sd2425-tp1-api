@@ -91,7 +91,17 @@ public class RestUsersClient extends UsersClient {
 
 
     public Result<User> updateUser(String userId, String password, User user) {
-        throw new RuntimeException("Not Implemented...");
+        //throw new RuntimeException("Not Implemented...");
+        Response r = target.path( userId )
+                .queryParam(RestUsers.PASSWORD, password).request()
+                .accept(MediaType.APPLICATION_JSON)
+                .put(Entity.entity(user, MediaType.APPLICATION_JSON));
+
+        int status = r.getStatus();
+        if( status != Status.OK.getStatusCode() )
+            return Result.error( getErrorCodeFrom(status));
+        else
+            return Result.ok( r.readEntity( User.class ));
     }
 
     public Result<User> deleteUser(String userId, String password) {

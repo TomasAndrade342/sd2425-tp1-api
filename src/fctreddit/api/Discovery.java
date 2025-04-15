@@ -63,6 +63,7 @@ public class Discovery {
                 new Thread(() -> {
                     while (running) {
                         try {
+                            ms.send(announcePkt);
                             Thread.sleep(DISCOVERY_ANNOUNCE_PERIOD);
                         } catch (Exception e) {
                             e.printStackTrace();

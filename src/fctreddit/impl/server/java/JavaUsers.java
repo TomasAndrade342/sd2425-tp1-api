@@ -23,9 +23,9 @@ public class JavaUsers implements Users {
 
     @Override
     public Result<String> createUser(User user) {
-        Log.info("createUser : " + user);
+        Log.info("createUser : " + user + '\n');
 
-        if (user.getUserId() == null || user.getPassword() == null || user.getFullName() == null
+        if (user.getUserId() == null || user.getPassword() == null || user.getPassword().isEmpty() || user.getFullName() == null
                 || user.getEmail() == null) {
             Log.info("User object invalid.");
             return Result.error(ErrorCode.BAD_REQUEST);
@@ -42,9 +42,9 @@ public class JavaUsers implements Users {
 
     @Override
     public Result<User> getUser(String userId, String password) {
-        Log.info("getUser : user = " + userId + "; pwd = " + password);
+        Log.info("getUser : user = " + userId + "; pwd = " + password + '\n');
 
-        if (userId == null || password == null) {
+        if (userId == null) {
             Log.info("UserId or password null.");
             return Result.error(ErrorCode.BAD_REQUEST);
         }
@@ -63,19 +63,61 @@ public class JavaUsers implements Users {
             Log.info("Password is incorrect");
             return Result.error(ErrorCode.FORBIDDEN);
         }
+        if (password == null) {
+            Log.info("UserId or password null.");
+            return Result.error(ErrorCode.BAD_REQUEST);
+        }
         return Result.ok(user);
     }
 
     @Override
     public Result<User> updateUser(String userId, String password, User user) {
         // TODO Auto-generated method stub
-        Log.info("updateUser : user = " + userId + "; pwd = " + password + " ; userData = " + user);
+        Log.info("updateUser : user = " + userId + "; pwd = " + password + " ; userData = " + user + '\n');
 
-        if (user.getUserId() == null || user.getPassword() == null || user.getFullName() == null
+        /**if (user.getUserId() == null || user.getPassword() == null || user.getFullName() == null
                 || user.getEmail() == null) {
             Log.info("User object invalid.");
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }*/
+        if (userId == null) {
+            Log.info("UserId or password null.");
+            return Result.error(ErrorCode.BAD_REQUEST);
         }
+
+        User OGUser;
+        try {
+            OGUser = hibernate.get(User.class, userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error(ErrorCode.INTERNAL_ERROR);
+        }
+
+        if (OGUser == null) {
+            Log.info("User does not exist.");
+            return Result.error(ErrorCode.NOT_FOUND);
+        }
+        if (!OGUser.getPassword().equals(password)) {
+            Log.info("Password is incorrect");
+            return Result.error(ErrorCode.FORBIDDEN);
+        }
+
+        if (user.getUserId() == null) {
+            user.setUserId(OGUser.getUserId());
+        }
+        if (user.getPassword() == null) {
+            user.setPassword(OGUser.getPassword());
+        }
+        if (user.getFullName() == null) {
+            user.setFullName(OGUser.getFullName());
+        }
+        if (user.getEmail() == null) {
+            user.setEmail(OGUser.getEmail());
+        }
+        if (user.getAvatarUrl() == null) {
+            user.setAvatarUrl(OGUser.getAvatarUrl());
+        }
+
         try {
             hibernate.update(user);
         } catch (Exception e) {
@@ -114,11 +156,11 @@ public class JavaUsers implements Users {
     @Override
     public Result<List<User>> searchUsers(String pattern) {
         // TODO Auto-generated method stub
-        Log.info("searchUsers : pattern = " + pattern);
+        Log.info("searchUsers : pattern = " + pattern + '\n');
 
         try {
             List<User> list = hibernate.jpql("SELECT u FROM User u WHERE u.userId LIKE '%" + pattern +"%'", User.class);
-            return (Result<List<User>>) list;
+            return Result.ok(list);
         } catch (Exception e) {
             e.printStackTrace();
             throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);

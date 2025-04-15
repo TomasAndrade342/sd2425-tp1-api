@@ -66,7 +66,6 @@ public class GrpcUsersServerStub implements UsersGrpc.AsyncService, BindableServ
         }
     }
 
-
     @Override
     public void deleteUser(DeleteUserArgs request, StreamObserver<DeleteUserResult> responseObserver) {
         //throw new RuntimeException("Not Implemented...");

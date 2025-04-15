@@ -33,11 +33,11 @@ public class CreateUserClient {
         Discovery disc = new Discovery(new InetSocketAddress(multiCastIp, multiCastPort));
         disc.start();
         URI[] knownUris = disc.knownUrisOf("Users", 1);
+        System.out.println("Sending request to server.");
         URI serverUrl = knownUris[0];
-
-
         User usr = new User( userId, fullName, email, password);
 
+        System.out.println("Sending request to server.");
         UsersClient client = null;
 
         if(serverUrl.getPath().endsWith("rest"))
