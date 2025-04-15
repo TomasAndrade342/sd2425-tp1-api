@@ -1,13 +1,12 @@
 package fctreddit.clients.grpc;
 
-import fctreddit.api.User;
 import fctreddit.api.java.Result;
 import fctreddit.api.java.Result.ErrorCode;
-import fctreddit.clients.DeleteUserClient;
 import fctreddit.clients.java.ImageClient;
 import fctreddit.impl.grpc.generated_java.ImageGrpc;
 import fctreddit.impl.grpc.generated_java.ImageProtoBuf;
 //import fctreddit.impl.grpc.util.DataModelAdaptor;
+import fctreddit.impl.grpc.generated_java.ImageGrpc;
 import io.grpc.*;
 import io.grpc.internal.PickFirstLoadBalancerProvider;
 
@@ -19,6 +18,17 @@ import java.util.concurrent.TimeUnit;
 
 public class GrpcImageClient extends ImageClient {
 
+
+    static {
+        LoadBalancerRegistry.getDefaultRegistry().register(new PickFirstLoadBalancerProvider());
+    }
+
+    final ImageGrpc.ImageBlockingStub stub;
+
+    public GrpcImageClient(URI serverURI) {
+        Channel channel = ManagedChannelBuilder.forAddress(serverURI.getHost(), serverURI.getPort()).usePlaintext().build();
+        stub = ImageGrpc.newBlockingStub(channel).withDeadlineAfter(READ_TIMEOUT, TimeUnit.MILLISECONDS);
+    }
 
     @Override
     public Result<String> createImage(String userId, byte[] imageContent, String password) {

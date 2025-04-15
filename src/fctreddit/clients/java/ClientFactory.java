@@ -3,6 +3,8 @@ package fctreddit.clients.java;
 import fctreddit.api.Discovery;
 import fctreddit.clients.grpc.GrpcUsersClient;
 import fctreddit.clients.rest.RestUsersClient;
+import fctreddit.clients.grpc.GrpcImageClient;
+import fctreddit.clients.rest.RestImageClient;
 
 import java.io.IOException;
 import java.net.URI;
@@ -25,6 +27,14 @@ public class ClientFactory {
             return new RestUsersClient(serverUrl);
         else
             return new GrpcUsersClient(serverUrl);
+    }
+
+    public static ImageClient getImageClient() throws IOException{
+        URI serverUrl = getServerUri();
+        if(serverUrl.getPath().endsWith("rest"))
+            return new RestImageClient(serverUrl);
+        else
+            return new GrpcImageClient(serverUrl);
     }
 
 }

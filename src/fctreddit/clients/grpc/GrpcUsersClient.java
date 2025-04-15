@@ -3,7 +3,6 @@ package fctreddit.clients.grpc;
 import fctreddit.api.User;
 import fctreddit.api.java.Result;
 import fctreddit.api.java.Result.ErrorCode;
-import fctreddit.clients.DeleteUserClient;
 import fctreddit.clients.java.UsersClient;
 import fctreddit.impl.grpc.generated_java.UsersGrpc;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf;

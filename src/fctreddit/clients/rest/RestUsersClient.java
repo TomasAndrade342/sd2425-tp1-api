@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.logging.Logger;
 
+import jakarta.ws.rs.core.GenericType;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 
@@ -22,25 +23,18 @@ import fctreddit.api.rest.RestUsers;
 import fctreddit.clients.java.UsersClient;
 
 public class RestUsersClient extends UsersClient {
-    private static Logger Log = Logger.getLogger(RestUsersClient.class.getName());
 
+    private static Logger Log = Logger.getLogger(RestUsersClient.class.getName());
     final URI serverURI;
     final Client client;
     final ClientConfig config;
-
     final WebTarget target;
-
     public RestUsersClient( URI serverURI ) {
         this.serverURI = serverURI;
-
         this.config = new ClientConfig();
-
         config.property( ClientProperties.READ_TIMEOUT, READ_TIMEOUT);
         config.property( ClientProperties.CONNECT_TIMEOUT, CONNECT_TIMEOUT);
-
-
         this.client = ClientBuilder.newClient(config);
-
         target = client.target( serverURI ).path( RestUsers.PATH );
     }
 
@@ -105,12 +99,35 @@ public class RestUsersClient extends UsersClient {
     }
 
     public Result<User> deleteUser(String userId, String password) {
-        throw new RuntimeException("Not Implemented...");
+        //throw new RuntimeException("Not Implemented...");
+
+        Response r = target.path(userId)
+                .queryParam(RestUsers.PASSWORD, password).request()
+                .accept(MediaType.APPLICATION_JSON)
+                .delete();
+
+        int status = r.getStatus();
+        if( status != Status.OK.getStatusCode() )
+            return Result.error( getErrorCodeFrom(status));
+        else
+            return Result.ok( r.readEntity( User.class ));
     }
 
     public Result<List<User>> searchUsers(String pattern) {
-        throw new RuntimeException("Not Implemented...");
+        Response r = target.path("/")
+                .queryParam(RestUsers.QUERY, pattern).request()
+                .accept(MediaType.APPLICATION_JSON)
+                .get();
+
+        int status = r.getStatus();
+        if (status != Status.OK.getStatusCode()) {
+            return Result.error(getErrorCodeFrom(status));
+        } else {
+            List<User> users = r.readEntity(new GenericType<List<User>>() {});
+            return Result.ok(users);
+        }
     }
+
 
     public static ErrorCode getErrorCodeFrom(int status) {
         return switch (status) {
