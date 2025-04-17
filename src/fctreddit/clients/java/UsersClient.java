@@ -3,10 +3,11 @@ package fctreddit.clients.java;
 import fctreddit.api.User;
 import fctreddit.api.java.Result;
 import fctreddit.api.java.Users;
+import fctreddit.clients.Client;
 
 import java.util.List;
 
-public abstract class UsersClient implements Users {
+public abstract class UsersClient extends Client implements Users {
 
     protected static final int READ_TIMEOUT = 5000;
     protected static final int CONNECT_TIMEOUT = 5000;

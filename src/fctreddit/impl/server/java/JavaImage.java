@@ -21,7 +21,9 @@ import jakarta.ws.rs.core.Response;
 public class JavaImage implements Image {
     private static final String BASE_IMAGE_DIR = "images";
     private static final String IP_PORT = "http://localhost:8080/images/";
-    @jakarta.ws.rs.Path("/images")
+
+    public JavaImage() {}
+
     @Override
     public Result<String> createImage(String userId, byte[] imageContent, String password) throws IOException {
         UsersClient users = ClientFactory.getUsersClient();

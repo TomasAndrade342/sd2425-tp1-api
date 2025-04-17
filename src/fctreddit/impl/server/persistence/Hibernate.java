@@ -2,7 +2,10 @@ package fctreddit.impl.server.persistence;
 
 import java.io.File;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
@@ -142,4 +145,24 @@ public class Hibernate {
         }
     }
 
+    public void execInTransaction(Consumer<Session> r) {
+        Transaction tx = null;
+        try(var session = sessionFactory.openSession()) {
+            tx = session.beginTransaction();
+            r.accept(session);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx!=null) tx.rollback();
+            throw e;
+        }
+    }
+
+    /**
+    public void update3(Object... objects) {
+        update2((session) -> {
+            for( var o : objects )
+                session.merge(o);
+        });
+    }
+     */
 }
