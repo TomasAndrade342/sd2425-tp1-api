@@ -25,8 +25,8 @@ public class ImageResource implements RestImage {
 
     @Override
     public String createImage(String userId, byte[] imageContents, String password) throws IOException {
-        Log.info("createImage = " + userId + " imageContents = " + Arrays.toString(imageContents) + "; pwd = " + password + '\n');
-
+        //Log.info("createImage = " + userId + " imageContents = " + Arrays.toString(imageContents) + "; pwd = " + password + '\n');
+        Log.info("createImage = " + userId + "; pwd = " + password + '\n');
         Result<String> res = impl.createImage(userId, imageContents, password);
         if(!res.isOK()) {
             throw new WebApplicationException(errorCodeToStatus(res.error()));

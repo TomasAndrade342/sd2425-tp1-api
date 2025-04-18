@@ -24,7 +24,7 @@ public class JavaImage implements Image {
 
     static {
         try {
-            IP_PORT = "http://" + InetAddress.getLocalHost().getHostName() + ":8080/images/";
+            IP_PORT = "http://" + InetAddress.getLocalHost().getHostAddress() + ":8080/rest/image/";
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
