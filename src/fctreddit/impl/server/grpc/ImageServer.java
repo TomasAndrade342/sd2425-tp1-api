@@ -3,6 +3,7 @@ package fctreddit.impl.server.grpc;
 import java.net.InetAddress;
 import java.util.logging.Logger;
 
+import fctreddit.api.Discovery;
 import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
 import io.grpc.Server;
@@ -12,6 +13,7 @@ public class ImageServer {
     public static final int PORT = 9000;
 
     private static final String GRPC_CTX = "/grpc";
+    public static final String SERVICE = "Image";
     private static final String SERVER_BASE_URI = "grpc://%s:%s%s";
 
     private static Logger Log = Logger.getLogger(ImageServer.class.getName());
@@ -23,7 +25,10 @@ public class ImageServer {
         Server server = Grpc.newServerBuilderForPort(PORT, cred).addService(stub).build();
         String serverURI = String.format(SERVER_BASE_URI, InetAddress.getLocalHost().getHostAddress(), PORT, GRPC_CTX);
 
-        Log.info(String.format("Users gRPC Server ready @ %s\n", serverURI));
+        Discovery discovery = new Discovery(Discovery.DISCOVERY_ADDR, SERVICE, serverURI);
+        discovery.start();
+
+        Log.info(String.format("%s gRPC Server ready @ %s\n", SERVICE, serverURI));
         server.start().awaitTermination();
     }
 }

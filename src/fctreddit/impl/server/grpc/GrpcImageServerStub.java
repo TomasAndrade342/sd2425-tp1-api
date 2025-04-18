@@ -1,7 +1,6 @@
 package fctreddit.impl.server.grpc;
 
 import java.io.IOException;
-import java.util.List;
 
 import fctreddit.api.java.Image;
 import fctreddit.impl.grpc.generated_java.ImageProtoBuf;
@@ -10,11 +9,7 @@ import io.grpc.BindableService;
 import io.grpc.ServerServiceDefinition;
 import io.grpc.stub.StreamObserver;
 import fctreddit.api.java.Result;
-import fctreddit.api.java.Image;
-import fctreddit.impl.grpc.util.DataModelAdaptor;
 import fctreddit.impl.grpc.generated_java.ImageGrpc;
-import fctreddit.impl.grpc.generated_java.ImageProtoBuf.CreateImageArgs;
-import fctreddit.impl.grpc.generated_java.ImageProtoBuf.CreateImageResult;
 import fctreddit.impl.grpc.generated_java.ImageProtoBuf.DeleteImageArgs;
 import fctreddit.impl.grpc.generated_java.ImageProtoBuf.DeleteImageResult;
 import fctreddit.impl.grpc.generated_java.ImageProtoBuf.GetImageArgs;
@@ -31,8 +26,13 @@ public class GrpcImageServerStub implements ImageGrpc.AsyncService, BindableServ
     }
 
     @Override
-    public void createImage(ImageProtoBuf.CreateImageArgs request, StreamObserver<ImageProtoBuf.CreateImageResult> responseObserver) throws IOException {
-        Result<String> res = impl.createImage(request.getUserId(), request.getImageContents().toByteArray(), request.getPassword());
+    public void createImage(ImageProtoBuf.CreateImageArgs request, StreamObserver<ImageProtoBuf.CreateImageResult> responseObserver) {
+        Result<String> res = null;
+        try {
+            res = impl.createImage(request.getUserId(), request.getImageContents().toByteArray(), request.getPassword());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         if( ! res.isOK() )
             responseObserver.onError(errorCodeToStatus(res.error()));
@@ -48,7 +48,7 @@ public class GrpcImageServerStub implements ImageGrpc.AsyncService, BindableServ
         if( ! res.isOK() )
             responseObserver.onError(errorCodeToStatus(res.error()));
         else {
-            //responseObserver.onNext( ImageProtoBuf.CreateImageResult.newBuilder().setImageId( res.value() ).build());
+            responseObserver.onNext( GetImageResult.newBuilder().setData(com.google.protobuf.ByteString.copyFrom(res.value())).build() );
             responseObserver.onCompleted();
         }
 

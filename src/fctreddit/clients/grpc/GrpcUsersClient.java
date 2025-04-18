@@ -5,7 +5,6 @@ import fctreddit.api.java.Result;
 import fctreddit.api.java.Result.ErrorCode;
 import fctreddit.clients.java.UsersClient;
 import fctreddit.impl.grpc.generated_java.UsersGrpc;
-import fctreddit.impl.grpc.generated_java.UsersProtoBuf;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.CreateUserArgs;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.GetUserResult;
 import fctreddit.impl.grpc.generated_java.UsersProtoBuf.GetUserArgs;

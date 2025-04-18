@@ -35,7 +35,7 @@ public class UsersServer {
 
             JdkHttpServerFactory.createHttpServer( URI.create(serverURI), config);
 
-            Log.info(String.format("%s Server ready @ %s\n",  SERVICE, serverURI));
+            Log.info(String.format("%s Rest Server ready @ %s\n",  SERVICE, serverURI));
 
         } catch( Exception e) {
             Log.severe(e.getMessage());

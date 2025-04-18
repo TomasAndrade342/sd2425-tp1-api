@@ -60,8 +60,6 @@ public class JavaImage implements Image {
 
     @Override
     public Result<byte[]> getImage(String userId, String imageId) {
-        Log.info("This is a debug message!\n");
-        System.out.println("This is a debug message!\n");
         try {
             Path imagePath = Paths.get(BASE_IMAGE_DIR, userId, imageId);
 
