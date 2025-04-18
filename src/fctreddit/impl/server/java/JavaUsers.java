@@ -8,7 +8,6 @@ import fctreddit.api.User;
 import fctreddit.api.java.Result;
 import fctreddit.api.java.Result.ErrorCode;
 import fctreddit.api.java.Users;
-import fctreddit.clients.Client;
 import fctreddit.impl.server.persistence.Hibernate;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;

@@ -19,12 +19,12 @@ import fctreddit.impl.server.rest.ImageResource;
 
 public class JavaImage implements Image {
     private static Logger Log = Logger.getLogger(JavaImage.class.getName());
-    private static final String BASE_IMAGE_DIR = "images";
+    private static final String BASE_IMAGE_DIR = "image";
     private static final String IP_PORT;
 
     static {
         try {
-            IP_PORT = "http://" + InetAddress.getLocalHost().getHostName() + ":8080/images/";
+            IP_PORT = "http://" + InetAddress.getLocalHost().getHostName() + ":8080/rest/image/";
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }

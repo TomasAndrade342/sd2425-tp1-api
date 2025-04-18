@@ -1,10 +1,7 @@
 package fctreddit.clients.java;
 
-import fctreddit.api.User;
 import fctreddit.api.java.Result;
 import fctreddit.api.java.Image;
-
-import java.util.List;
 
 public abstract class ImageClient implements Image {
 

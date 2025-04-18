@@ -21,7 +21,7 @@ public interface RestImage {
 	public static final String PASSWORD = "pwd";
 	/**
 	 * Create an image
-	 * 
+	 *
 	 * @param imageContents the bytes of the image in PNG format (in the body of the request)
 	 * @return 	OK in the case of success returning the URI to access the image. 
 	 * 		   	NOT_FOUND if user does not exists
@@ -44,10 +44,10 @@ public interface RestImage {
 	@Path("{" + USER_ID + "}/{" + IMAGE_ID + "}")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	byte[] getImage(@PathParam(USER_ID) String userId, @PathParam(IMAGE_ID) String imageId);
-	
+
 	/**
 	 * Deletes an image identified by imageId
-	 * 
+	 *
 	 * @param imageId the identifier of the image
 	 * @return 	NO_CONTENT in the case of success. 
 	 * 			NOT_FOUND if the image or user does not exists
@@ -58,7 +58,7 @@ public interface RestImage {
 	@DELETE
 	@Path("{" + USER_ID + "}/{" + IMAGE_ID + "}")
 	void deleteImage(@PathParam(USER_ID) String userId, @PathParam(IMAGE_ID) String imageId, @QueryParam(PASSWORD) String password);
-	
-	
-	
+
+
+
 }

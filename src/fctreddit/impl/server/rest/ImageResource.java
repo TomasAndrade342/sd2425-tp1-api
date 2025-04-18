@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-import fctreddit.api.User;
 import fctreddit.api.java.Image;
 import fctreddit.api.java.Result;
 import fctreddit.api.rest.RestImage;
