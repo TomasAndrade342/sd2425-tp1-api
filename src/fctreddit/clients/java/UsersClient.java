@@ -7,7 +7,7 @@ import fctreddit.clients.Client;
 
 import java.util.List;
 
-public abstract class UsersClient extends Client implements Users {
+public abstract class UsersClient implements Users {
 
     protected static final int READ_TIMEOUT = 5000;
     protected static final int CONNECT_TIMEOUT = 5000;
@@ -24,5 +24,4 @@ public abstract class UsersClient extends Client implements Users {
     abstract public Result<User> deleteUser(String userId, String password);
 
     abstract public Result<List<User>> searchUsers(String pattern);
-
 }

@@ -1,19 +1,12 @@
 package fctreddit.clients.grpc;
 
 import fctreddit.api.java.Result;
-import fctreddit.api.java.Result.ErrorCode;
 import fctreddit.clients.java.ImageClient;
-import fctreddit.impl.grpc.generated_java.ImageGrpc;
-import fctreddit.impl.grpc.generated_java.ImageProtoBuf;
-//import fctreddit.impl.grpc.util.DataModelAdaptor;
 import fctreddit.impl.grpc.generated_java.ImageGrpc;
 import io.grpc.*;
 import io.grpc.internal.PickFirstLoadBalancerProvider;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class GrpcImageClient extends ImageClient {

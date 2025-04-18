@@ -1,24 +1,15 @@
 package fctreddit.clients.rest;
 
 import java.net.URI;
-import java.util.List;
 import java.util.logging.Logger;
 
-import jakarta.ws.rs.core.GenericType;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 
-import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
-import fctreddit.api.User;
 import fctreddit.api.java.Result;
-import fctreddit.api.java.Result.ErrorCode;
 import fctreddit.api.rest.RestUsers;
 import fctreddit.clients.java.ImageClient;
 

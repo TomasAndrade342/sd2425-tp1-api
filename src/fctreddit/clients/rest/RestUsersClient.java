@@ -40,52 +40,77 @@ public class RestUsersClient extends UsersClient {
 
     public Result<String> createUser(User user) {
 
-            Response r = executeOperationPost(target.request().accept(MediaType.APPLICATION_JSON), Entity.entity(user, MediaType.APPLICATION_JSON));
+        for(int i = 0; i < MAX_RETRIES ; i++) {
+            try {
+                Response r = target.request()
+                        .accept( MediaType.APPLICATION_JSON)
+                        .post(Entity.entity(user, MediaType.APPLICATION_JSON));
 
-            if (r == null)
-                return Result.error(ErrorCode.TIMEOUT);
-            int status = r.getStatus();
-            if (status != Status.OK.getStatusCode())
-                return Result.error(getErrorCodeFrom(status));
-            else return Result.ok(r.readEntity(String.class));
+
+                int status = r.getStatus();
+                if( status != Status.OK.getStatusCode() )
+                    return Result.error( getErrorCodeFrom(status));
+                else
+                    return Result.ok( r.readEntity( String.class ));
+
+            } catch( ProcessingException x ) {
+                Log.info(x.getMessage());
+
+                try {
+                    Thread.sleep(RETRY_SLEEP);
+                } catch (InterruptedException e) {
+                    //Nothing to be done here.
+                }
+            }
+            catch( Exception x ) {
+                x.printStackTrace();
+            }
+        }
+        return Result.error(  ErrorCode.TIMEOUT );
     }
 
     public Result<User> getUser(String userId, String pwd) {
+        Response r = target.path( userId )
+                .queryParam(RestUsers.PASSWORD, pwd).request()
+                .accept(MediaType.APPLICATION_JSON)
+                .get();
 
-        Response r = executeOperationGet(target.request(MediaType.APPLICATION_JSON));
-
-        if (r == null)
-            return Result.error(ErrorCode.TIMEOUT);
         int status = r.getStatus();
-        if (status != Status.OK.getStatusCode())
-            return Result.error(getErrorCodeFrom(status));
-        else return Result.ok(r.readEntity(User.class));
+        if( status != Status.OK.getStatusCode() )
+            return Result.error( getErrorCodeFrom(status));
+        else
+            return Result.ok( r.readEntity( User.class ));
     }
-    
+
+
 
     public Result<User> updateUser(String userId, String password, User user) {
         //throw new RuntimeException("Not Implemented...");
-        Response r = executeOperationPut(target.request().accept(MediaType.APPLICATION_JSON), Entity.entity(user, MediaType.APPLICATION_JSON));
+        Response r = target.path( userId )
+                .queryParam(RestUsers.PASSWORD, password).request()
+                .accept(MediaType.APPLICATION_JSON)
+                .put(Entity.entity(user, MediaType.APPLICATION_JSON));
 
-        if (r == null)
-            return Result.error(ErrorCode.TIMEOUT);
         int status = r.getStatus();
-        if (status != Status.OK.getStatusCode())
-            return Result.error(getErrorCodeFrom(status));
-        else return Result.ok(r.readEntity(User.class));
+        if( status != Status.OK.getStatusCode() )
+            return Result.error( getErrorCodeFrom(status));
+        else
+            return Result.ok( r.readEntity( User.class ));
     }
 
     public Result<User> deleteUser(String userId, String password) {
         //throw new RuntimeException("Not Implemented...");
 
-        Response r = executeOperationDelete(target.request(MediaType.APPLICATION_JSON));
+        Response r = target.path(userId)
+                .queryParam(RestUsers.PASSWORD, password).request()
+                .accept(MediaType.APPLICATION_JSON)
+                .delete();
 
-        if (r == null)
-            return Result.error(ErrorCode.TIMEOUT);
         int status = r.getStatus();
-        if (status != Status.OK.getStatusCode())
-            return Result.error(getErrorCodeFrom(status));
-        else return Result.ok(r.readEntity(User.class));
+        if( status != Status.OK.getStatusCode() )
+            return Result.error( getErrorCodeFrom(status));
+        else
+            return Result.ok( r.readEntity( User.class ));
     }
 
     public Result<List<User>> searchUsers(String pattern) {
@@ -93,7 +118,6 @@ public class RestUsersClient extends UsersClient {
                 .queryParam(RestUsers.QUERY, pattern).request()
                 .accept(MediaType.APPLICATION_JSON)
                 .get();
-
 
         int status = r.getStatus();
         if (status != Status.OK.getStatusCode()) {
