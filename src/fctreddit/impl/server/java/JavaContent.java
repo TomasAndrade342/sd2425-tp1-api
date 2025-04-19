@@ -7,6 +7,8 @@ import fctreddit.api.java.Result;
 import fctreddit.clients.java.ClientFactory;
 import fctreddit.clients.java.UsersClient;
 import fctreddit.impl.server.persistence.Hibernate;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 
 import java.io.IOException;
 import java.util.List;
@@ -68,16 +70,25 @@ public class JavaContent implements Content {
 
     @Override
     public Result<Post> getPost(String postId) {
-            Post post = hibernate.get(Post.class, postId);
-            if (post == null) {
-                return Result.error(Result.ErrorCode.NOT_FOUND);
-            }
-            return Result.ok(post);
+        Post post = hibernate.get(Post.class, postId);
+        if (post == null) {
+            return Result.error(Result.ErrorCode.NOT_FOUND);
+        }
+        return Result.ok(post);
     }
 
     @Override
     public Result<List<String>> getPostAnswers(String postId, long maxTimeout) {
-        return null;
+        if (postId == null || !getPost(postId).isOK()) {
+            return Result.error(Result.ErrorCode.NOT_FOUND);
+        }
+        try {
+            List<String> list = hibernate.jpql("SELECT p.postId FROM Post p WHERE p.parentUrl LIKE '%/" + postId + "' ORDER BY p.creationTimestamp ASC", String.class);
+            return Result.ok(list);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
