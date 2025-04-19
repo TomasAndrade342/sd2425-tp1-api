@@ -28,6 +28,7 @@ public class ContentResource implements RestContent {
 
         Result<String> res = impl.createPost(post, userPassword);
         if(!res.isOK()) {
+            Log.info("Error value: " + res.value() + "\n");
             throw new WebApplicationException(errorCodeToStatus(res.error()));
         }
         return res.value();
