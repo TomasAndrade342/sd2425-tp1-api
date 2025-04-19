@@ -3,7 +3,6 @@ package fctreddit.impl.server.grpc;
 import fctreddit.api.java.Content;
 import fctreddit.impl.grpc.generated_java.ContentGrpc;
 import fctreddit.impl.grpc.generated_java.ContentProtoBuf;
-import fctreddit.impl.grpc.generated_java.ImageProtoBuf;
 import fctreddit.impl.server.java.JavaContent;
 import io.grpc.BindableService;
 import io.grpc.ServerServiceDefinition;

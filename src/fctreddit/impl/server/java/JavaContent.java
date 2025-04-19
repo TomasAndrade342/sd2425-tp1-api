@@ -1,11 +1,16 @@
 package fctreddit.impl.server.java;
 
 import fctreddit.api.Post;
+import fctreddit.api.User;
 import fctreddit.api.java.Content;
 import fctreddit.api.java.Result;
+import fctreddit.clients.java.ClientFactory;
+import fctreddit.clients.java.UsersClient;
 import fctreddit.impl.server.persistence.Hibernate;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class JavaContent implements Content {
@@ -17,7 +22,43 @@ public class JavaContent implements Content {
 
     @Override
     public Result<String> createPost(Post post, String userPassword) {
-        return null;
+        UsersClient users = null;
+        try {
+            users = ClientFactory.getUsersClient();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (post.getAuthorId().isBlank() || post.getContent().isBlank()) {
+            return Result.error(Result.ErrorCode.BAD_REQUEST);
+        }
+
+        Result<User> OGUser = users.getUser(post.getAuthorId(), userPassword);
+        if (!OGUser.isOK()) {
+            if (OGUser.error().equals(Result.ErrorCode.NOT_FOUND)) {
+                return Result.error(Result.ErrorCode.NOT_FOUND);
+            }
+            else if (OGUser.error().equals(Result.ErrorCode.FORBIDDEN)) {
+                return Result.error(Result.ErrorCode.FORBIDDEN);
+            }
+        }
+
+        String parentUrl = post.getParentUrl();
+        if (parentUrl != null) {
+            String[] urlParts = parentUrl.split("/");
+            String postId =  urlParts[urlParts.length-1];
+            Result<Post> OGPost = getPost(postId);
+            if (!OGPost.isOK()) {
+                return Result.error(Result.ErrorCode.NOT_FOUND);
+            }
+        }
+
+        post.setCreationTimestamp(System.currentTimeMillis());
+        UUID postId = UUID.randomUUID();
+        post.setPostId(postId.toString());
+        hibernate.persist(post);
+
+        return Result.ok(postId.toString());
     }
 
     @Override
@@ -27,7 +68,11 @@ public class JavaContent implements Content {
 
     @Override
     public Result<Post> getPost(String postId) {
-        return null;
+            Post post = hibernate.get(Post.class, postId);
+            if (post == null) {
+                return Result.error(Result.ErrorCode.NOT_FOUND);
+            }
+            return Result.ok(post);
     }
 
     @Override
